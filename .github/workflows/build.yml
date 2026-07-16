@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,13 +18,15 @@ jobs:
         run: |
           git clone --recursive https://github.com/theos/theos.git ${{ github.workspace }}/theos
 
-      - name: Download iPhoneOS SDK
+      - name: Get iOS SDK from Xcode
         run: |
-          mkdir -p ${{ github.workspace }}/theos/sdks
-          curl -L -o ${{ github.workspace }}/theos/sdks/iPhoneOS16.5.sdk.zip \
-            "https://github.com/theos/sdks/raw/master/iPhoneOS16.5.sdk.zip"
-          cd ${{ github.workspace }}/theos/sdks
-          unzip -q iPhoneOS16.5.sdk.zip
+          SDK_PATH=$(xcrun --sdk iphoneos --show-sdk-path)
+          echo "Using SDK at: $SDK_PATH"
+          SDK_VERSION=$(xcrun --sdk iphoneos --show-sdk-version)
+          echo "SDK Version: $SDK_VERSION"
+          THEOS_SDK=${{ github.workspace }}/theos/sdks/iPhoneOS${SDK_VERSION}.sdk
+          cp -R "$SDK_PATH" "$THEOS_SDK"
+          echo "SDK copied to: $THEOS_SDK"
 
       - name: Build
         run: |
