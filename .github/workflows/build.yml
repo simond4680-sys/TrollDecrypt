@@ -21,18 +21,20 @@ jobs:
       - name: Get iOS SDK from Xcode
         run: |
           SDK_PATH=$(xcrun --sdk iphoneos --show-sdk-path)
-          echo "Using SDK at: $SDK_PATH"
           SDK_VERSION=$(xcrun --sdk iphoneos --show-sdk-version)
           echo "SDK Version: $SDK_VERSION"
+          echo "SDK Path: $SDK_PATH"
           THEOS_SDK=${{ github.workspace }}/theos/sdks/iPhoneOS${SDK_VERSION}.sdk
+          mkdir -p "${{ github.workspace }}/theos/sdks"
           cp -R "$SDK_PATH" "$THEOS_SDK"
+          ls -la "${{ github.workspace }}/theos/sdks/"
           echo "SDK copied to: $THEOS_SDK"
 
       - name: Build
         run: |
           export THEOS=${{ github.workspace }}/theos
           export PATH="$THEOS/bin:$PATH"
-          make package FINALPACKAGE=1
+          make clean all package FINALPACKAGE=1
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
