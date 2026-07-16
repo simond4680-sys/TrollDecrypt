@@ -22,12 +22,12 @@ jobs:
         run: |
           brew install ldid
 
-      - name: Download iOS SDK
+      - name: Download iOS 16.5 SDK
         run: |
           mkdir -p ${{ github.workspace }}/theos/sdks
           cd ${{ github.workspace }}/theos/sdks
           curl -L -o iPhoneOS16.5.sdk.tar.xz \
-            "https://github.com/theos/sdks/releases/download/master/iPhoneOS16.5.sdk.tar.xz"
+            "https://github.com/theos/sdks/releases/download/SDK%20Release%201/iPhoneOS16.5.sdk.tar.xz"
           tar xf iPhoneOS16.5.sdk.tar.xz
           rm iPhoneOS16.5.sdk.tar.xz
           ls -la
