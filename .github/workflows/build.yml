@@ -18,20 +18,18 @@ jobs:
         run: |
           git clone --recursive https://github.com/theos/theos.git ${{ github.workspace }}/theos
 
+      - name: Install dependencies
+        run: |
+          brew install ldid
+
       - name: Get iOS SDK from Xcode
         run: |
           SDK_PATH=$(xcrun --sdk iphoneos --show-sdk-path)
           SDK_VERSION=$(xcrun --sdk iphoneos --show-sdk-version)
           echo "SDK Version: $SDK_VERSION"
-          echo "SDK Path: $SDK_PATH"
-          echo "SDK Path contents:"
-          ls -la "$SDK_PATH"
           THEOS_SDK=${{ github.workspace }}/theos/sdks/iPhoneOS${SDK_VERSION}.sdk
           mkdir -p "${{ github.workspace }}/theos/sdks"
           ditto "$SDK_PATH" "$THEOS_SDK"
-          echo "Verifying SDK copy:"
-          ls -la "${{ github.workspace }}/theos/sdks/"
-          ls "$THEOS_SDK"
 
       - name: Build
         run: |
